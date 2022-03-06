@@ -1,3 +1,4 @@
+// import {books} from "./books.js"
 // console.log('hello')
 
 ////////////////////////1/////////////////////////
@@ -437,4 +438,191 @@
 
 
 
+///////////////////////////////////////////////////////////////
 
+const books=[
+	{
+		id: '1',
+		title: `Apple. Эволюция компьютера`,
+		author: `Владимир Невзоров`,
+		img: `https://bukva.ua/img/products/449/449532_200.jpg`,
+		plot: `Богато иллюстрированный хронологический справочник по истории компьютеров, в котором увлекательно 
+    и в структурированном виде изложена информация о создании и развитии техники Apple на фоне истории 
+    персональных компьютеров в целом.
+    В книге даны описания десятков наиболее значимых моделей устройств как Apple, так и других производителей, 
+    сопровождающиеся большим количеством оригинальных студийных фотографий.
+    Книга предназначена для широкого круга читателей, интересующихся историей электроники. 
+    Она также может послужить источником вдохновения для дизайнеров, маркетологов и предпринимателей.`,
+	},
+	{
+		id: '2',
+		title: `Как объяснить ребенку информатику`,
+		author: `Кэрол Вордерман`,
+		img: `https://bukva.ua/img/products/480/480030_200.jpg`,
+		plot: `Иллюстрированная энциклопедия в формате инфографики о технических, социальных и культурных аспектах 
+    в информатике. Пошагово объясняет, как детям максимально эффективно использовать компьютеры и интернет-сервисы, 
+    оставаясь в безопасности. 
+    Книга рассказывает обо всем: от хранения данных до жизни в интернет-пространстве, 
+    от программирования до компьютерных атак. О том, как компьютеры функционируют, о современном программном 
+    обеспечении, устройстве Интернета и цифровом этикете. Все концепты - от хакера до биткоина - 
+    объясняются наглядно с помощью иллюстраций и схем.`,
+	},
+	{
+		id: '3',
+		title: `Путь скрам-мастера. #ScrumMasterWay`,
+		author: `Зузана Шохова`,
+		img: `https://bukva.ua/img/products/480/480090_200.jpg`,
+		plot: `Эта книга поможет вам стать выдающимся скрам-мастером и добиться отличных результатов с вашей командой. 
+    Она иллюстрированная и легкая для восприятия - вы сможете прочитать ее за выходные, а пользоваться полученными 
+    знаниями будете в течение всей карьеры.
+    Основываясь на 15-летнем опыте, Зузана Шохова рассказывает, какие роли и обязанности есть у скрам-мастера, 
+    как ему решать повседневные задачи, какие компетенции нужны, чтобы стать выдающимся скрам-мастером, 
+    какими инструментами ему нужно пользоваться.`,
+	},
+];
+
+const divEl = document.querySelector("#root")
+
+
+
+const divLeft = document.createElement("div")
+const divRight = document.createElement("div")
+divEl.append(divLeft, divRight)
+
+divLeft.className="divLeft"
+divRight.className = "divRight"
+
+const titleEl = document.createElement('h1')
+titleEl.textContent='Библиотека'
+divLeft.appendChild(titleEl)
+
+const listLeftEl = document.createElement('ul')
+const btnAddLeft = document.createElement('button')
+
+btnAddLeft.textContent="Add"
+
+divLeft.append(listLeftEl, btnAddLeft)
+
+btnAddLeft.addEventListener('click', addBook)
+
+
+function renderList() {
+    const booksListMarkup = books.map(({title, id}) =>
+        `<li id="${id}"><p class="bookName">${title}</p><button type="button" data-action="edit">Редактировать</button><button type="button" data-action="delete">Удалить</button></li>`
+    ).join('')
+    listLeftEl.insertAdjacentHTML("afterbegin", booksListMarkup)
+
+    const bookNameEl = document.querySelectorAll(".bookName")
+    bookNameEl.forEach(el => el.addEventListener('click', onRenderPreview))
+    
+    const btnEdit = document.querySelectorAll("button[data-action='edit']")
+    const btnDelete = document.querySelectorAll("button[data-action='delete']")
+
+    btnEdit.forEach(el=>el.addEventListener('click', onEditBook))
+    btnDelete.forEach(el=>el.addEventListener('click', onDeleteBook))
+
+
+}
+
+
+renderList()
+
+function onRenderPreview(even) {
+    const findeBook = books.find(({ title }) =>
+    even.target.textContent === title);
+    
+    const markUp = bookMarkup(findeBook)
+    divRight.innerHTML = '';
+    divRight.insertAdjacentHTML("afterbegin", markUp)
+}
+
+function bookMarkup({title, author, img, plot}) {
+    return `
+    <div>
+    <h2>${title}</h2>
+    <p>${author}</p>
+    <img src="${img}" alt="Обложка книги ${title}"/>
+    <p>${plot}</p>
+
+</div>`
+}
+
+
+function onEditBook(event) {
+    const editBtn = event.target;
+    const titleEdit = editBtn.previousElementSibling
+   
+    const findeBook = books.find(({ title }) =>
+        titleEdit.textContent === title);
+    
+
+}
+
+function onDeleteBook(event) {
+    
+}
+
+function addBook() {
+    const newBook = {
+        id: String(Date.now()),      
+        title:'',
+        author:'',
+        img:'',
+        plot:'',
+    };
+
+    const markUp = createForm()
+    divRight.innerHTML=''
+    divRight.insertAdjacentHTML("afterbegin", markUp)
+    
+    const btnSave = document.querySelector("button[data-action='save']")
+    // btnSave.addEventListener('click', addNewBookInArray)
+
+    const formEl = document.querySelector("form")
+    formEl.addEventListener('change', addNewBookInArray)
+
+    function addNewBookInArray(event) {
+        newBook.title = event.currentTarget.elements.title.value
+        newBook.author = event.currentTarget.elements.author.value
+        newBook.img = event.currentTarget.elements.img.value
+        newBook.plot = event.currentTarget.elements.plot.value
+
+    }
+    
+     btnSave.addEventListener('click', pushBook)
+
+        function pushBook() {
+            
+            books.push(newBook)
+            console.log(newBook)
+            console.log(books)
+            
+        }
+
+}
+
+
+function createForm() {
+    return `<form>
+    <label>
+        Title
+        <input name="title">
+    </label>
+
+    <label>
+        Author
+        <input name="author">
+    </label>
+
+    <label>
+        Image
+        <input name="img">
+    </label>
+
+    <label>
+        Description
+        <input name="plot">
+    </label>
+    <button type="button" data-action='save'>Save</button>
+</form>`
+}

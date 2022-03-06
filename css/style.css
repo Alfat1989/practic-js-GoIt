@@ -1,0 +1,13 @@
+#root {
+  display: flex;
+}
+
+.divLeft {
+  width: 40%;
+  background-color: bisque;
+}
+
+.divRight {
+  width: 60%;
+  background-color: rgb(228, 225, 74);
+}
